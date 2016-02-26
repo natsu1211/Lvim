@@ -543,8 +543,44 @@ if count(g:vim_bundle_groups, 'enhance')
             normal! x
         endif
     endfunction
-    nnoremap <silent> <C-/> :call IsWhiteLine()<CR>
+    nnoremap <silent> <Leader>cc :call IsWhiteLine()<CR>
+    " Use defalut key mappings for other commneter functions
+    " [count]<leader>cn |NERDComNestedComment|
+" Same as <leader>cc but forces nesting.
 
+" [count]<leader>c<space> |NERDComToggleComment|
+" Toggles the comment state of the selected line(s). If the topmost selected line is commented, all selected lines are uncommented and vice versa.
+
+" [count]<leader>cm |NERDComMinimalComment|
+" Comments the given lines using only one set of multipart delimiters.
+
+" [count]<leader>ci |NERDComInvertComment|
+" Toggles the comment state of the selected line(s) individually.
+
+" [count]<leader>cs |NERDComSexyComment|
+" Comments out the selected lines ``sexily''
+
+" [count]<leader>cy |NERDComYankComment|
+" Same as <leader>cc except that the commented line(s) are yanked first.
+
+" <leader>c$ |NERDComEOLComment|
+" Comments the current line from the cursor to the end of line.
+
+" <leader>cA |NERDComAppendComment|
+" Adds comment delimiters to the end of line and goes into insert mode between them.
+
+" |NERDComInsertComment|
+" Adds comment delimiters at the current cursor position and inserts between. Disabled by default.
+
+" <leader>ca |NERDComAltDelim|
+" Switches to the alternative set of delimiters.
+
+" [count]<leader>cl
+" [count]<leader>cb |NERDComAlignedComment|
+" Same as |NERDComComment| except that the delimiters are aligned down the left side (<leader>cl) or both sides (<leader>cb).
+
+" [count]<leader>cu |NERDComUncommentLine|
+" Uncomments the selected line(s).
     " -> Undo tree
     nnoremap <Leader>u :UndotreeToggle<CR>
     let g:undotree_SetFocusWhenToggle=1
@@ -556,6 +592,19 @@ if count(g:vim_bundle_groups, 'enhance')
 
     " -> EnhancedDiff
     let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
+    
+    " -> Hardtime
+    " always on, do not use jjjj and kkkk to scroll
+    let g:hardtime_default_on = 1
+    let g:hardtime_allow_different_key = 1
+
+    " -> vim-surround
+    " cs[{, ysiw], ds{ds)
+    
+    " -> easymotion
+    "<leader><leader>w,b
+    "<leader><leader>j,k,h,l
+    ".
 
 endif
 " setting for moving plugins
@@ -679,13 +728,13 @@ if count(g:vim_bundle_groups, 'complete')
             let g:UltiSnipsExpandTrigger = '<C-j>'
             let g:UltiSnipsJumpForwardTrigger = '<C-j>'
             let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
-
+            let g:UltiSnipsEnableSnipMate = 0
             " Enable omni completion.
        "     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-       "     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+            "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
        "     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
        "     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-       "     autocmd FileType xml set:local omnifunc=xmlcomplete#CompleteTags
+            "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
        "     autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
        "     autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
@@ -733,7 +782,7 @@ if count(g:vim_bundle_groups, 'git')
         nnoremap <silent> <leader>ge :Gedit<CR>
         " Mnemonic _i_nteractive
         nnoremap <silent> <leader>gi :Git add -p %<CR>
-        nnoremap <silent> <leader>gg :SignifyToggle<CR>
+        "nnoremap <silent> <leader>gg :SignifyToggle<CR>
     endif
 endif
 
