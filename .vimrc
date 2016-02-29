@@ -311,6 +311,8 @@ if count(g:vim_bundle_groups, 'enhance') " Vim enhancement
     Plug 'chrisbra/vim-diff-enhanced' " Create better diffs
     Plug 'kana/vim-submode'
     Plug 'kshenoy/vim-signature' "Show marks
+    Plug 'vim-scripts/bufkill.vim' "Show marks
+
 endif
 
 if count(g:vim_bundle_groups, 'move') " Moving
@@ -416,33 +418,33 @@ vnoremap k gk
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 " Fast tab and windows operations
-nnoremap s <Nop>
-nnoremap sj <C-w>j
-nnoremap sk <C-w>k
-nnoremap sl <C-w>l
-nnoremap sh <C-w>h
-nnoremap sJ <C-w>J
-nnoremap sK <C-w>K
-nnoremap sL <C-w>L
-nnoremap sH <C-w>H
-"next tab
-nnoremap sn gt
-"previous tab
-nnoremap sp gT
-nnoremap sr <C-w>r
-nnoremap s= <C-w>=
-nnoremap sw <C-w>w
-nnoremap so <C-w>_<C-w>|
-"next buffer
-nnoremap sN :<C-u>bn<CR>
-"previous buffer
-nnoremap sP :<C-u>bp<CR>
-nnoremap st :<C-u>tabnew<CR>
-"nnoremap sT :<C-u>Unite tab<CR>
-nnoremap ss :<C-u>sp<CR>
-nnoremap sv :<C-u>vs<CR>
-nnoremap sq :<C-u>q<CR>
-nnoremap sd :<C-u>bd<CR>
+" nnoremap s <Nop>
+" nnoremap sj <C-w>j
+" nnoremap sk <C-w>k
+" nnoremap sl <C-w>l
+" nnoremap sh <C-w>h
+" nnoremap sJ <C-w>J
+" nnoremap sK <C-w>K
+" nnoremap sL <C-w>L
+" nnoremap sH <C-w>H
+" "next tab
+" nnoremap sn gt
+" "previous tab
+" nnoremap sp gT
+" nnoremap sr <C-w>r
+" nnoremap s= <C-w>=
+" nnoremap sw <C-w>w
+" nnoremap so <C-w>_<C-w>|
+" "next buffer
+" nnoremap sN :<C-u>bn<CR>
+" "previous buffer
+" nnoremap sP :<C-u>bp<CR>
+" nnoremap st :<C-u>tabnew<CR>
+" "nnoremap sT :<C-u>Unite tab<CR>
+" nnoremap ss :<C-u>sp<CR>
+" nnoremap sv :<C-u>vs<CR>
+" nnoremap sq :<C-u>q<CR>
+" nnoremap sd :<C-u>bd<CR>
 "nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 "nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 "require submode bundle, could input s<<< to instead s<s<s<, and s< to instead <C-w><
@@ -586,8 +588,8 @@ if count(g:vim_bundle_groups, 'enhance')
     let g:undotree_SetFocusWhenToggle=1
 
     " -> investigate.vim
-    nnoremap <leader>K :call investigate#Investigate('n')<CR>
-    vnoremap <leader>K :call investigate#Investigate('v')<CR>
+    nnoremap <leader>L :call investigate#Investigate('n')<CR>
+    vnoremap <leader>L :call investigate#Investigate('v')<CR>
     let g:investigate_use_dash=1
 
     " -> EnhancedDiff
@@ -603,8 +605,43 @@ if count(g:vim_bundle_groups, 'enhance')
     
     " -> easymotion
     "<leader><leader>w,b
-    "<leader><leader>j,k,h,l
-    ".
+    "<leader><leader>j,k
+    " Do not rely on default bindings.
+    let g:EasyMotion_do_mapping = 0
+    " Just use one leader as prefix
+    map <Leader> <Plug>(easymotion-prefix)
+    " Jump to anywhere you want by just `4` or `3` key strokes without thinking!
+    " `s{char}{char}{target}`
+    nmap s <Plug>(easymotion-s2)
+    xmap s <Plug>(easymotion-s2)
+    omap z <Plug>(easymotion-s2)
+    " use f and t for bidirectional line move
+    map f <Plug>(easymotion-bd-fl)
+    map t <Plug>(easymotion-bd-tl)
+    " Turn on case sensitive feature
+    let g:EasyMotion_smartcase = 1
+    " Jump to first match with enter & space
+    let g:EasyMotion_enter_jump_first = 1
+    let g:EasyMotion_space_jump_first = 1
+    " Now, you don't need to repetitively press `n` or `N` with EasyMotion feature
+    " `<Tab>` & `<S-Tab>` to scroll up/down a page with next match
+    " :h easymotion-command-line
+    nmap g/ <Plug>(easymotion-sn)
+    xmap g/ <Plug>(easymotion-sn)
+    omap g/ <Plug>(easymotion-tn)
+    map <Leader>j <Plug>(easymotion-j)
+    map <Leader>k <Plug>(easymotion-k)
+    " keep cursor column with `JK` motions
+    let g:EasyMotion_startofline = 0
+    " using w and e in all modes
+    map <Leader>w <Plug>(easymotion-bd-w)
+    map <Leader>e <Plug>(easymotion-bd-e)
+    set nohlsearch
+    map  / <Plug>(easymotion-sn)
+    omap / <Plug>(easymotion-tn)
+    map  n <Plug>(easymotion-next)
+    map  N <Plug>(easymotion-prev)
+
 
 endif
 " setting for moving plugins
@@ -728,13 +765,12 @@ if count(g:vim_bundle_groups, 'complete')
             let g:UltiSnipsExpandTrigger = '<C-j>'
             let g:UltiSnipsJumpForwardTrigger = '<C-j>'
             let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
-            let g:UltiSnipsEnableSnipMate = 0
             " Enable omni completion.
        "     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-            "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+       "     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
        "     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
        "     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-            "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+       "     autocmd FileType xml set:local omnifunc=xmlcomplete#CompleteTags
        "     autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
        "     autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
