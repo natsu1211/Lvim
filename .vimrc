@@ -395,8 +395,8 @@ set hlsearch " Highlight search terms
 set incsearch " Find as you type search
 
 " Keep search matches in the middle of the window
-nnoremap n nzzzv
-nnoremap N Nzzzv
+"nnoremap n nzzzv
+"nnoremap N Nzzzv
 nnoremap * *zzzv
 nnoremap # #zzzv
 nnoremap g* g*zzzv
@@ -418,36 +418,35 @@ vnoremap k gk
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 " Fast tab and windows operations
-" nnoremap s <Nop>
-" nnoremap sj <C-w>j
-" nnoremap sk <C-w>k
-" nnoremap sl <C-w>l
-" nnoremap sh <C-w>h
-" nnoremap sJ <C-w>J
-" nnoremap sK <C-w>K
-" nnoremap sL <C-w>L
-" nnoremap sH <C-w>H
-" "next tab
-" nnoremap sn gt
-" "previous tab
-" nnoremap sp gT
-" nnoremap sr <C-w>r
-" nnoremap s= <C-w>=
-" nnoremap sw <C-w>w
-" nnoremap so <C-w>_<C-w>|
-" "next buffer
-" nnoremap sN :<C-u>bn<CR>
-" "previous buffer
-" nnoremap sP :<C-u>bp<CR>
-" nnoremap st :<C-u>tabnew<CR>
-" "nnoremap sT :<C-u>Unite tab<CR>
-" nnoremap ss :<C-u>sp<CR>
-" nnoremap sv :<C-u>vs<CR>
-" nnoremap sq :<C-u>q<CR>
-" nnoremap sd :<C-u>bd<CR>
-"nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-"nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-"require submode bundle, could input s<<< to instead s<s<s<, and s< to instead <C-w><
+nnoremap <Leader><Leader>j <C-w>j
+nnoremap <Leader><Leader>k <C-w>k
+nnoremap <Leader><Leader>l <C-w>l
+nnoremap <Leader><Leader>h <C-w>h
+nnoremap <Leader><Leader>J <C-w>J
+nnoremap <Leader><Leader>K <C-w>K
+nnoremap <Leader><Leader>L <C-w>L
+nnoremap <Leader><Leader>H <C-w>H
+"next tab
+nnoremap <Leader><Leader>n gt
+"previous tab
+nnoremap <Leader><Leader>p gT
+nnoremap <Leader><Leader>r <C-w>r
+nnoremap <Leader><Leader>= <C-w>=
+nnoremap <Leader><Leader>w <C-w>w
+nnoremap <Leader><Leader>o <C-w>_<C-w>|
+"next buffer
+nnoremap <Leader><Leader>N :<C-u>bn<CR>
+"previous buffer
+nnoremap <Leader><Leader>P :<C-u>bp<CR>
+nnoremap <Leader><Leader>t :<C-u>tabnew<CR>
+"nnoremap <Leader><Leader>T :<C-u>Unite tab<CR>
+nnoremap <Leader><Leader>s :<C-u>sp<CR>
+nnoremap <Leader><Leader>v :<C-u>vs<CR>
+nnoremap <Leader><Leader>q :<C-u>q<CR>
+nnoremap <Leader><Leader>d :<C-u>bd<CR>
+nnoremap <Leader><Leader>b :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap <Leader><Leader>B :<C-u>Unite buffer -buffer-name=file<CR>
+require submode bundle, could input s<<< to instead s<s<s<, and s< to instead <C-w><
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
 call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
 call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
@@ -618,6 +617,7 @@ if count(g:vim_bundle_groups, 'enhance')
     " use f and t for bidirectional line move
     map f <Plug>(easymotion-bd-fl)
     map t <Plug>(easymotion-bd-tl)
+    map F <Plug>(easymotion-bd-f)
     " Turn on case sensitive feature
     let g:EasyMotion_smartcase = 1
     " Jump to first match with enter & space
