@@ -13,7 +13,6 @@ let g:vim_autocomplete='YCM'
 let g:vim_bundle_groups=['ui', 'enhance', 'move', 'navigate',
             \'complete', 'compile', 'git', 'language']
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "------------------------------------------------
 " General
@@ -280,6 +279,7 @@ call plug#begin(expand($HOME . '/.vim/bundle/'))
 if count(g:vim_bundle_groups, 'ui') " UI setting
     Plug 'bling/vim-airline' " Fancy Status line
     Plug 'altercation/vim-colors-solarized' "solarized theme
+    Plug 'tomasr/molokai'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'bling/vim-bufferline' "Show Buffer line
     Plug 'powerline/fonts'
@@ -371,7 +371,9 @@ endif
 if count(g:vim_bundle_groups, 'language') " Language Specificity
     "Plug 'matthias-guenther/hammer.vim' " Markup
     Plug 'plasticboy/vim-markdown'
-    Plug 'suan/vim-instant-markdown'
+    Plug 'tyru/open-browser.vim'
+    "Plug 'suan/vim-instant-markdown'
+    Plug 'kannokanno/previm'
     Plug 'fatih/vim-go' " Golang
     Plug 'tpope/vim-rails' " Rails
     Plug 'LaTeX-Box-Team/LaTeX-Box' " LaTex
@@ -516,6 +518,9 @@ if count(g:vim_bundle_groups, 'ui')
 
 endif" Setting for enhancement plugins
 if count(g:vim_bundle_groups, 'enhance')
+    " -> Markdown
+    nnoremap <Leader>md :PrevimOpen<CR>
+    xnoremap <Leader>md :PrevimOpen<CR>
 
     " -> delimitMate
     let delimitMate_expand_cr=1
@@ -773,6 +778,11 @@ if count(g:vim_bundle_groups, 'complete')
        "     autocmd FileType xml set:local omnifunc=xmlcomplete#CompleteTags
        "     autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
        "     autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+       augroup PrevimSettings
+           autocmd!
+           autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+       augroup END
+       "let g:previm_open_cmd = 'open -a Safari'
 
     endif
 
