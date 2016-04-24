@@ -3,6 +3,7 @@
 " vim Setting
 "------------------------------------------------
 let g:vim_user='natsu1211' " User name
+let g:vim_email='longyutao1211@gmail.com'
 let g:vim_fancy_font=1 " Enable using fancy font
 
 " vim ui setting
@@ -12,7 +13,6 @@ let g:vim_autocomplete='YCM'
 " vim plugin setting
 let g:vim_bundle_groups=['ui', 'enhance', 'move', 'navigate',
             \'complete', 'compile', 'git', 'language']
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "------------------------------------------------
@@ -61,11 +61,13 @@ let maplocalleader='\' " Change the maplocalleader
 "autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "autocmd BufWritePost $MYVIMRC NeoBundleClean
 " Fast edit the .vimrc file using ,rc
-nnoremap <Leader>rc :tabedit $MYVIMRC<CR>
+nnoremap <Leader>rc :edit $MYVIMRC<CR>
+nnoremap <Leader>src :source $MYVIMRC<CR>
 
 set autoread " Set autoread when a file is changed outside
 "set autowrite " Write on make/shell commands
-
+set ttyfast
+set lazyredraw
 set history=100 " Increase the lines of history
 set modeline " Turn on modeline
 set encoding=utf-8 " Set utf-8 encoding
@@ -128,6 +130,54 @@ function! ToggleBG()
     endif
 endfunction
 noremap <leader>bg :call ToggleBG()<CR>
+
+"auto insert file head according to file type
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call SetFileTitle()"
+function! SetFileTitle()
+	"shell file
+	if &filetype == 'sh'
+		call setline(1,"\#!/bin/zsh")
+		call append(line("."), "")
+
+    elseif &filetype == 'python'
+        call setline(1,"#!/usr/bin/env python")
+        call append(line("."),"# coding=utf-8")
+	    call append(line(".")+1, "")
+
+    elseif &filetype == 'ruby'
+        call setline(1,"#!/usr/bin/env ruby")
+        call append(line("."),"# encoding: utf-8")
+	    call append(line(".")+1, "")
+	else
+		call setline(1, "/*************************************************************************")
+		call append(line("."), "	> File Name: ".expand("%"))
+		call append(line(".")+1, "	> Author: ")
+		call append(line(".")+2, "	> Mail: ")
+		call append(line(".")+3, "	> Created Time: ".strftime("%c"))
+		call append(line(".")+4, " ************************************************************************/")
+		call append(line(".")+5, "")
+	endif
+	if &filetype == 'cpp'
+		call append(line(".")+6, "#include<iostream>")
+		call append(line(".")+7, "using namespace std;")
+		call append(line(".")+8, "")
+	endif
+	if &filetype == 'c'
+		call append(line(".")+6, "#include<stdio.h>")
+		call append(line(".")+7, "")
+	endif
+	if expand("%:e") == 'h'
+		call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_H")
+		call append(line(".")+7, "#define _".toupper(expand("%:r"))."_H")
+		call append(line(".")+8, "#endif")
+	endif
+	if &filetype == 'java'
+		call append(line(".")+6,"public class ".expand("%:r"))
+		call append(line(".")+7,"")
+	endif
+    "locate to end of file after creating new file
+endfunc
+autocmd BufNewFile * normal G
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -280,6 +330,7 @@ call plug#begin(expand($HOME . '/.vim/bundle/'))
 if count(g:vim_bundle_groups, 'ui') " UI setting
     Plug 'bling/vim-airline' " Fancy Status line
     Plug 'altercation/vim-colors-solarized' "solarized theme
+    Plug 'tomasr/molokai'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'bling/vim-bufferline' "Show Buffer line
     Plug 'powerline/fonts'
@@ -305,9 +356,9 @@ if count(g:vim_bundle_groups, 'enhance') " Vim enhancement
     Plug 'AndrewRadev/splitjoin.vim' " Splitjoin
     Plug 'sickill/vim-pasta' " Better paste
     Plug 'Keithbsmiley/investigate.vim' " Helper
-    Plug 'takac/vim-hardtime' " disable hjkl and arrowkeys
+    "Plug 'takac/vim-hardtime' " disable hjkl and arrowkeys
     Plug 'wellle/targets.vim' " Text objects
-    "Plug 'roman/golden-ratio' " Resize windows
+    "expand("%:e")Plug 'roman/golden-ratio' " Resize windows
     Plug 'chrisbra/vim-diff-enhanced' " Create better diffs
     Plug 'kana/vim-submode'
     Plug 'kshenoy/vim-signature' "Show marks
@@ -324,14 +375,7 @@ if count(g:vim_bundle_groups, 'move') " Moving
     Plug 'edsono/vim-matchit' " Match it
     Plug 'Shougo/unite.vim' " Search engine
     Plug 'Shougo/unite-outline' " Unite outline
-    Plug 'Shougo/vimproc', {
-                \ 'build' : {
-                \     'windows' : 'make -f make_mingw32.mak',
-                \     'cygwin' : 'make -f make_cygwin.mak',
-                \     'mac' : 'make -f make_mac.mak',
-                \     'unix' : 'make -f make_unix.mak',
-                \    },
-                \ }
+    Plug 'Shougo/vimproc', {'do': 'make'}
 endif
 
 if count(g:vim_bundle_groups, 'navigate') " Navigation
@@ -347,7 +391,7 @@ if count(g:vim_bundle_groups, 'complete') " Completion
         Plug 'Shougo/neosnippet.vim' " Snippet engine
         Plug 'Shougo/neosnippet-snippets' " Snippets
     else
-        Plug 'Valloric/YouCompleteMe'
+        Plug 'Valloric/YouCompleteMe', {'do': './install.py --all'}
         let g:vim_completion_engine='YouCompleteMe'
         Plug 'sirver/ultisnips' " Snippet engine
     endif
@@ -371,7 +415,9 @@ endif
 if count(g:vim_bundle_groups, 'language') " Language Specificity
     "Plug 'matthias-guenther/hammer.vim' " Markup
     Plug 'plasticboy/vim-markdown'
-    Plug 'suan/vim-instant-markdown'
+    Plug 'tyru/open-browser.vim'
+    "Plug 'suan/vim-instant-markdown'
+    Plug 'kannokanno/previm'
     Plug 'fatih/vim-go' " Golang
     Plug 'tpope/vim-rails' " Rails
     Plug 'LaTeX-Box-Team/LaTeX-Box' " LaTex
@@ -446,7 +492,7 @@ nnoremap <Leader><Leader>q :<C-u>q<CR>
 nnoremap <Leader><Leader>d :<C-u>bd<CR>
 nnoremap <Leader><Leader>b :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap <Leader><Leader>B :<C-u>Unite buffer -buffer-name=file<CR>
-require submode bundle, could input s<<< to instead s<s<s<, and s< to instead <C-w><
+"require submode bundle, could input s<<< to instead s<s<s<, and s< to instead <C-w><
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
 call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
 call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
@@ -483,14 +529,14 @@ xnoremap & :&&<CR>
 nnoremap J mzJ`z
 
 " Select entire buffer
-nnoremap <C-a>  ggvGg_
+nnoremap <Leader>bb  ggvGg_
 
 " Strip all trailing whitespace in the current file
 nnoremap <Leader>q :%s/\s\+$//<CR>:let @/=''<CR>
 
 " Modify all the indents
 nnoremap \= gg=G
-
+imap <D-j> <ESC>
 " See the differences between the current buffer and the file it was loaded from
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 1d_
             \ | diffthis | wincmd p | diffthis
@@ -514,8 +560,12 @@ if count(g:vim_bundle_groups, 'ui')
     let g:airline_theme= 'molokai'
     let g:airline#extensions#tabline#enabled = 1
 
-endif" Setting for enhancement plugins
+endif
+" Setting for enhancement plugins
 if count(g:vim_bundle_groups, 'enhance')
+    " -> Markdown
+    nnoremap <Leader>md :PrevimOpen<CR>
+    xnoremap <Leader>md :PrevimOpen<CR>
 
     " -> delimitMate
     let delimitMate_expand_cr=1
@@ -593,15 +643,15 @@ if count(g:vim_bundle_groups, 'enhance')
 
     " -> EnhancedDiff
     let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
-    
+
     " -> Hardtime
     " always on, do not use jjjj and kkkk to scroll
-    let g:hardtime_default_on = 1
-    let g:hardtime_allow_different_key = 1
+    let g:hardtime_default_on = 0
+    "let g:hardtime_allow_different_key = 1
 
     " -> vim-surround
     " cs[{, ysiw], ds{ds)
-    
+
     " -> easymotion
     "<leader><leader>w,b
     "<leader><leader>j,k
@@ -773,12 +823,17 @@ if count(g:vim_bundle_groups, 'complete')
        "     autocmd FileType xml set:local omnifunc=xmlcomplete#CompleteTags
        "     autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
        "     autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+       augroup PrevimSettings
+           autocmd!
+           autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+       augroup END
+       "let g:previm_open_cmd = 'open -a Safari'
 
     endif
 
     " Setting info for snips
     let g:snips_author=g:vim_user
-    "let g:snips_email=g:vim_email
+    let g:snips_email=g:vim_email
     "let g:snips_github=g:vim_github
 
 endif
