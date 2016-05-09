@@ -537,6 +537,7 @@ nnoremap <Leader>q :%s/\s\+$//<CR>:let @/=''<CR>
 " Modify all the indents
 nnoremap \= gg=G
 imap <D-j> <ESC>
+vmap <D-j> <ESC>
 " See the differences between the current buffer and the file it was loaded from
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 1d_
             \ | diffthis | wincmd p | diffthis
