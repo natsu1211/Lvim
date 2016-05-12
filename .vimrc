@@ -13,6 +13,10 @@ let g:vim_autocomplete='YCM'
 " vim plugin setting
 let g:vim_bundle_groups=['ui', 'enhance', 'move', 'navigate',
             \'complete', 'compile', 'git', 'language']
+" ack & ag search engine
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "------------------------------------------------
@@ -349,6 +353,7 @@ if count(g:vim_bundle_groups, 'enhance') " Vim enhancement
     Plug 'kshenoy/vim-signature' "Show marks
     Plug 'vim-scripts/bufkill.vim' "Show marks
     Plug 'tpope/vim-endwise' "auto close for ruby and some other languages
+    Plug 'mileszs/ack.vim' "Ack search engine
 
 endif
 
@@ -676,7 +681,6 @@ if count(g:vim_bundle_groups, 'enhance')
     map  n <Plug>(easymotion-next)
     map  N <Plug>(easymotion-prev)
 
-
 endif
 " setting for moving plugins
 if count(g:vim_bundle_groups, 'move')
@@ -794,7 +798,7 @@ if count(g:vim_bundle_groups, 'complete')
 
             " enable completion from tags
             let g:ycm_collect_identifiers_from_tags_files = 1
-
+            let g:ycm_global_ycm_extra_conf = '~/Lvim'
             " remap Ultisnips for compatibility for YCM
             let g:UltiSnipsExpandTrigger = '<C-j>'
             let g:UltiSnipsJumpForwardTrigger = '<C-j>'
