@@ -13,6 +13,10 @@ let g:vim_autocomplete='YCM'
 " vim plugin setting
 let g:vim_bundle_groups=['ui', 'enhance', 'move', 'navigate',
             \'complete', 'compile', 'git', 'language']
+" ack & ag search engine
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "------------------------------------------------
@@ -139,43 +143,30 @@ function! SetFileTitle()
 	if &filetype == 'sh'
 		call setline(1,"\#!/bin/zsh")
 		call append(line("."), "")
-
     elseif &filetype == 'python'
         call setline(1,"#!/usr/bin/env python")
         call append(line("."),"# coding=utf-8")
 	    call append(line(".")+1, "")
-
     elseif &filetype == 'ruby'
         call setline(1,"#!/usr/bin/env ruby")
         call append(line("."),"# encoding: utf-8")
 	    call append(line(".")+1, "")
-	else
-		call setline(1, "/*************************************************************************")
-		call append(line("."), "	> File Name: ".expand("%"))
-		call append(line(".")+1, "	> Author: ")
-		call append(line(".")+2, "	> Mail: ")
-		call append(line(".")+3, "	> Created Time: ".strftime("%c"))
-		call append(line(".")+4, " ************************************************************************/")
-		call append(line(".")+5, "")
-	endif
-	if &filetype == 'cpp'
+    elseif &filetype == 'cpp'
 		call append(line(".")+6, "#include<iostream>")
 		call append(line(".")+7, "using namespace std;")
 		call append(line(".")+8, "")
-	endif
-	if &filetype == 'c'
+    elseif &filetype == 'c'
 		call append(line(".")+6, "#include<stdio.h>")
 		call append(line(".")+7, "")
-	endif
-	if expand("%:e") == 'h'
-		call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_H")
-		call append(line(".")+7, "#define _".toupper(expand("%:r"))."_H")
-		call append(line(".")+8, "#endif")
-	endif
-	if &filetype == 'java'
+    elseif &filetype == 'java'
 		call append(line(".")+6,"public class ".expand("%:r"))
 		call append(line(".")+7,"")
 	endif
+    if expand("%:e") == 'h'
+        call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_H")
+        call append(line(".")+7, "#define _".toupper(expand("%:r"))."_H")
+        call append(line(".")+8, "#endif")
+    endif
     "locate to end of file after creating new file
 endfunc
 autocmd BufNewFile * normal G
@@ -357,13 +348,13 @@ if count(g:vim_bundle_groups, 'enhance') " Vim enhancement
     Plug 'AndrewRadev/splitjoin.vim' " Splitjoin
     Plug 'sickill/vim-pasta' " Better paste
     Plug 'Keithbsmiley/investigate.vim' " Helper
-    "Plug 'takac/vim-hardtime' " disable hjkl and arrowkeys
     Plug 'wellle/targets.vim' " Text objects
-    "expand("%:e")Plug 'roman/golden-ratio' " Resize windows
     Plug 'chrisbra/vim-diff-enhanced' " Create better diffs
     Plug 'kana/vim-submode'
     Plug 'kshenoy/vim-signature' "Show marks
     Plug 'vim-scripts/bufkill.vim' "Show marks
+    Plug 'tpope/vim-endwise' "auto close for ruby and some other languages
+    Plug 'mileszs/ack.vim' "Ack search engine
 
 endif
 
@@ -537,8 +528,10 @@ nnoremap <Leader>q :%s/\s\+$//<CR>:let @/=''<CR>
 
 " Modify all the indents
 nnoremap \= gg=G
+" quick ESC
 imap <D-j> <ESC>
 vmap <D-j> <ESC>
+xmap <D-j> <ESC>
 " See the differences between the current buffer and the file it was loaded from
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 1d_
             \ | diffthis | wincmd p | diffthis
@@ -646,11 +639,6 @@ if count(g:vim_bundle_groups, 'enhance')
     " -> EnhancedDiff
     let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
 
-    " -> Hardtime
-    " always on, do not use jjjj and kkkk to scroll
-    let g:hardtime_default_on = 0
-    "let g:hardtime_allow_different_key = 1
-
     " -> vim-surround
     " cs[{, ysiw], ds{ds)
 
@@ -693,7 +681,6 @@ if count(g:vim_bundle_groups, 'enhance')
     omap / <Plug>(easymotion-tn)
     map  n <Plug>(easymotion-next)
     map  N <Plug>(easymotion-prev)
-
 
 endif
 " setting for moving plugins
@@ -812,7 +799,7 @@ if count(g:vim_bundle_groups, 'complete')
 
             " enable completion from tags
             let g:ycm_collect_identifiers_from_tags_files = 1
-
+            let g:ycm_global_ycm_extra_conf = '~/Lvim'
             " remap Ultisnips for compatibility for YCM
             let g:UltiSnipsExpandTrigger = '<C-j>'
             let g:UltiSnipsJumpForwardTrigger = '<C-j>'
