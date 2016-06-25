@@ -50,13 +50,13 @@ set mousehide               " Hide the mouse cursor while typing
 set encoding=utf-8
 set termencoding=utf-8
 set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
-if has('clipboard')
-    if has('unnamedplus')  " When possible use + register for copy-paste
-        set clipboard=unnamed,unnamedplus
-    else         " On mac and Windows, use * register for copy-paste
-        set clipboard=unnamed
-    endif
-endif
+" if has('clipboard')
+    " if has('unnamedplus')  " When possible use + register for copy-paste
+        " set clipboard=unnamed,unnamedplus
+    " else         " On mac and Windows, use * register for copy-paste
+        " set clipboard=unnamed
+    " endif
+" endif
 
 let mapleader=',' " Change the mapleader
 let maplocalleader='\' " Change the maplocalleader
@@ -176,13 +176,13 @@ autocmd BufNewFile * normal G
 " UI
 "------------------------------------------------
 syntax on
-"if  filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-    "let g:solarized_termcolors=256
-    "let g:solarized_termtrans=1
-    "let g:solarized_contrast="normal"
-    "let g:solarized_visibility="normal"
-    "color solarized             " Load a colorscheme
-"else
+" if  filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+    " let g:solarized_termcolors=256
+    " let g:solarized_termtrans=1
+    " let g:solarized_contrast="normal"
+    " let g:solarized_visibility="normal"
+    " color solarized             " Load a colorscheme
+" else
 color molokai
 "endif
 set title
@@ -262,7 +262,7 @@ endif
 if has('gui_running')
     set guioptions-=m "hide toolbar"
     set guioptions-=T "hide menu"
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h14          "set font
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12          "set font
 endif
 if has('cmdline_info')
     set ruler                   " Show the ruler
@@ -410,6 +410,7 @@ if count(g:vim_bundle_groups, 'language') " Language Specificity
     "Plug 'suan/vim-instant-markdown'
     Plug 'kannokanno/previm'
     Plug 'fatih/vim-go' " Golang
+    Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
     Plug 'tpope/vim-rails' " Rails
     Plug 'LaTeX-Box-Team/LaTeX-Box' " LaTex
     Plug 'sheerun/vim-polyglot' " Language Support
@@ -654,9 +655,9 @@ if count(g:vim_bundle_groups, 'enhance')
     xmap s <Plug>(easymotion-s2)
     omap z <Plug>(easymotion-s2)
     " use f and t for bidirectional line move
-    map f <Plug>(easymotion-bd-fl)
-    map t <Plug>(easymotion-bd-tl)
-    map F <Plug>(easymotion-bd-f)
+    " map f <Plug>(easymotion-bd-fl)
+    " map t <Plug>(easymotion-bd-tl)
+    " map F <Plug>(easymotion-bd-f)
     " Turn on case sensitive feature
     let g:EasyMotion_smartcase = 1
     " Jump to first match with enter & space
