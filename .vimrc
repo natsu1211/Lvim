@@ -81,6 +81,7 @@ set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatib
 set nobackup " Set backup
 set undofile " Set undo
 set noswapfile
+set foldlevelstart=10 "donot fold anything
 "set spell "spell checking on
 set hidden                          " Allow buffer switching without saving
 set iskeyword+=_,$,@,%,#,-
